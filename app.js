@@ -11,11 +11,9 @@ var app = express();
 //AUTHENTICATION
 app.use((req, res, next) => {
   const apiKey = req.get("x-api-key");
-  if (!apiKey || apiKey !== process.env.API_KEY) {
-    res.sendStatus(401);
-  } else {
-    next();
-  }
+  if (!apiKey || apiKey !== process.env.API_KEY)
+    return res.status(401).json({ message: "Unauthorized" });
+  else return next();
 });
 
 app.use(bodyParser.json({ limit: "50mb" }));
@@ -48,7 +46,6 @@ app.use(function(err, req, res, next) {
 
   // send error
   res.status(err.status || 500).json({
-    status: err.status || 500,
     message: err.message || "Uknown Error"
   });
 });
